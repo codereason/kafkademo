@@ -1,13 +1,15 @@
 package com.yuhuang.consumer;
 
 
+import kafka.api.FetchRequest;
+import kafka.api.FetchRequestBuilder;
 import kafka.cluster.BrokerEndPoint;
-import kafka.javaapi.PartitionMetadata;
-import kafka.javaapi.TopicMetadata;
-import kafka.javaapi.TopicMetadataRequest;
-import kafka.javaapi.TopicMetadataResponse;
+import kafka.javaapi.*;
 import kafka.javaapi.consumer.SimpleConsumer;
+import kafka.javaapi.message.ByteBufferMessageSet;
+import kafka.message.MessageAndOffset;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +26,8 @@ public class LowlevelConsumer {
         String topic = "first";
         int partition = 0;
         long offset = 2;
+        LowlevelConsumer lowlevelConsumer = new LowlevelConsumer();
+        lowlevelConsumer.getData(brokers, port, topic, partition, offset);
     }
 
     private BrokerEndPoint findLeader(List<String> brokers, int port, String topic, int partition) {
@@ -56,8 +60,25 @@ public class LowlevelConsumer {
     }
 
     //get data
-    private void getData() {
+    private void getData(List<String> brokers, int port, String topic, int partition, long offset) {
+        BrokerEndPoint leader = findLeader(brokers, port, topic, partition);
+        if (leader == null) {
+            return;
+        }
 
+        String leaderHost = leader.host();
+        SimpleConsumer getData = new SimpleConsumer(leaderHost, port, 1000, 1024 * 4
+                , "getData");
+        FetchRequest fetchRequest = new FetchRequestBuilder().addFetch(topic, partition, offset, 100).build();
+        FetchResponse fetchResponse = getData.fetch(fetchRequest);
+        ByteBufferMessageSet messageAndOffsets = fetchResponse.messageSet(topic, partition);
+        for (MessageAndOffset messageAndOffset : messageAndOffsets) {
+            long offset1 = messageAndOffset.offset();
+            ByteBuffer payload = messageAndOffset.message().payload();
+            byte[] bytes = new byte[payload.limit()];
+            payload.get(bytes);
+            System.out.println(offset1 + " -- " + new String(bytes));
+        }
     }
 
 }
