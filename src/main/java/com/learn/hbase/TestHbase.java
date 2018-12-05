@@ -1,10 +1,7 @@
 package com.learn.hbase;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.HColumnDescriptor;
-import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -123,7 +120,23 @@ public class TestHbase {
         table.delete(delete);
         table.close();
     }
-    public static void scanTable(String tableName, String rowKey, String cf, String cn) throws IOException {
+    //全表扫描
+    public static void scanTable(String tableName) throws IOException {
+        //全表扫描
+        Table table = connection.getTable(TableName.valueOf(tableName));
+        Scan scan = new Scan();
+
+
+        ResultScanner scanner = table.getScanner(scan);
+        for (Result result:scanner){
+            Cell[] cells = result.rawCells();
+            for (Cell cell:cells){
+                System.out.println("RowKey:"+Bytes.toString(CellUtil.cloneRow(cell))+
+                ",CF:"+ Bytes.toString(CellUtil.cloneFamily(cell))+
+                ",CN:"+ Bytes.toString(CellUtil.cloneQualifier(cell))+
+                ",VALUE:"+ Bytes.toString(CellUtil.cloneValue(cell)));
+            }
+        }
 
 
     }
@@ -139,7 +152,8 @@ public class TestHbase {
 //        putData("student", "1003", "info", "age", "19");
 
 
-        deleteTable("student","1003","info","sex");
+//        deleteTable("student","1003","info","sex");
+        scanTable("student");
         close(connection, admin);
 
     }
