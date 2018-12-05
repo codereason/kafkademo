@@ -14,12 +14,13 @@ import java.io.IOException;
 public class TestHbase {
     //判断表是否存在
     private static Admin admin = null;
+    private static Connection connection = null;
 
     static {
         Configuration configuration = HBaseConfiguration.create();
         configuration.set("hbase.zookeeper.quorum", "192.168.37.100");
         /* 获取hbase的管理员对象 */
-        Connection connection = null;
+
         try {
             connection = ConnectionFactory.createConnection(configuration);
             admin = connection.getAdmin();
@@ -28,7 +29,7 @@ public class TestHbase {
         }
     }
 
-    private void close(Connection conn, Admin admin) {
+    private static void close(Connection conn, Admin admin) {
         if (conn != null) {
             try {
                 conn.close();
@@ -83,6 +84,17 @@ public class TestHbase {
         System.out.println("Create table success");
     }
 
+    public static void deleteTable(String tableName) throws IOException {
+        if (tableExist(tableName)) {
+            admin.disableTable(TableName.valueOf(tableName));
+            admin.deleteTable(TableName.valueOf(tableName));
+
+        }
+        if (!tableExist(tableName)) {
+            System.out.println("Delete table " + tableName + " success");
+        }
+    }
+
     //删除表
     //CRUD
     public static void main(String[] args) throws IOException {
@@ -90,7 +102,9 @@ public class TestHbase {
 //        System.out.println(tableExist("staff"));
 //        System.out.println(tableExist("student"));
 
-        createTable("clienttable","info");
+        deleteTable("clienttable");
         System.out.println(tableExist("clienttable"));
+        close(connection, admin);
+
     }
 }
