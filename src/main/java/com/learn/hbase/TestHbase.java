@@ -89,7 +89,11 @@ public class TestHbase {
             admin.disableTable(TableName.valueOf(tableName));
             admin.deleteTable(TableName.valueOf(tableName));
 
+        } else {
+            System.out.println("No such table");
+            return;
         }
+
         if (!tableExist(tableName)) {
             System.out.println("Delete table " + tableName + " success");
         }
