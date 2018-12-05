@@ -1,4 +1,4 @@
-package com.yuhuang.consumer;
+package com.learn.kafka.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;

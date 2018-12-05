@@ -1,4 +1,4 @@
-package com.yuhuang.consumer;
+package com.learn.kafka.consumer;
 
 
 import kafka.api.FetchRequest;

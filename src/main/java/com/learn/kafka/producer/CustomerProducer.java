@@ -1,4 +1,4 @@
-package com.yuhuang.producer;
+package com.learn.kafka.producer;
 
 import org.apache.kafka.clients.producer.*;
 
