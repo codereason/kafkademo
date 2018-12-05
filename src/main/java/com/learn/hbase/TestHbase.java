@@ -65,7 +65,7 @@ public class TestHbase {
 
 
     //创建表
-    public void createTable(String tableName, String... cfs) throws IOException {//
+    public static void createTable(String tableName, String... cfs) throws IOException {//
         if (tableExist(tableName)) {
             System.out.println("Table already exists");
             return;
@@ -87,7 +87,10 @@ public class TestHbase {
     //CRUD
     public static void main(String[] args) throws IOException {
         System.out.println("123");
-        System.out.println(tableExist("staff"));
-        System.out.println(tableExist("student"));
+//        System.out.println(tableExist("staff"));
+//        System.out.println(tableExist("student"));
+
+        createTable("clienttable","info");
+        System.out.println(tableExist("clienttable"));
     }
 }
