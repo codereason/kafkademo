@@ -115,11 +115,12 @@ public class TestHbase {
         Table table = connection.getTable(TableName.valueOf(tableName));
         //创建delete对象
         Delete delete = new Delete(Bytes.toBytes(rowKey));
-        delete.addColumns(Bytes.toBytes("info"),Bytes.toBytes("name"));
-        delete.addColumns(Bytes.toBytes("info"),Bytes.toBytes("sex"));
+        delete.addColumns(Bytes.toBytes("info"), Bytes.toBytes("name"));
+        delete.addColumns(Bytes.toBytes("info"), Bytes.toBytes("sex"));
         table.delete(delete);
         table.close();
     }
+
     //全表扫描
     public static void scanTable(String tableName) throws IOException {
         //全表扫描
@@ -128,18 +129,25 @@ public class TestHbase {
 
 
         ResultScanner scanner = table.getScanner(scan);
-        for (Result result:scanner){
+        for (Result result : scanner) {
             Cell[] cells = result.rawCells();
-            for (Cell cell:cells){
-                System.out.println("RowKey:"+Bytes.toString(CellUtil.cloneRow(cell))+
-                ",CF:"+ Bytes.toString(CellUtil.cloneFamily(cell))+
-                ",CN:"+ Bytes.toString(CellUtil.cloneQualifier(cell))+
-                ",VALUE:"+ Bytes.toString(CellUtil.cloneValue(cell)));
+            for (Cell cell : cells) {
+                System.out.println("RowKey:" + Bytes.toString(CellUtil.cloneRow(cell)) +
+                        ",CF:" + Bytes.toString(CellUtil.cloneFamily(cell)) +
+                        ",CN:" + Bytes.toString(CellUtil.cloneQualifier(cell)) +
+                        ",VALUE:" + Bytes.toString(CellUtil.cloneValue(cell)));
             }
         }
 
 
     }
+
+    //获取指定列族：列的数据
+    public static void getData(String tableName, String RowKey, String cf, String cn) throws IOException {
+        Table table = connection.getTable(TableName.valueOf(tableName));
+        table.get()
+    }
+
     public static void main(String[] args) throws IOException {
         System.out.println("123");
 //        System.out.println(tableExist("staff"));
