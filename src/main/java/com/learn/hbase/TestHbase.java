@@ -5,9 +5,8 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Admin;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
 
@@ -15,9 +14,10 @@ public class TestHbase {
     //判断表是否存在
     private static Admin admin = null;
     private static Connection connection = null;
+    private static Configuration configuration = null;
 
     static {
-        Configuration configuration = HBaseConfiguration.create();
+        configuration = HBaseConfiguration.create();
         configuration.set("hbase.zookeeper.quorum", "192.168.37.100");
         /* 获取hbase的管理员对象 */
 
@@ -84,6 +84,7 @@ public class TestHbase {
         System.out.println("Create table success");
     }
 
+    //删除表
     public static void deleteTable(String tableName) throws IOException {
         if (tableExist(tableName)) {
             admin.disableTable(TableName.valueOf(tableName));
@@ -99,15 +100,28 @@ public class TestHbase {
         }
     }
 
-    //删除表
+
     //CRUD
+    public static void putData(String tableName, String rowkey, String cf, String cn, String value) throws IOException {
+        Table table= connection.getTable(TableName.valueOf(tableName));
+
+
+        //创建put对象
+        Put put = new Put(Bytes.toBytes(rowkey));
+        //添加数据
+        put.addColumn(Bytes.toBytes(cf),Bytes.toBytes(cn),Bytes.toBytes(value));
+        //执行添加操作
+        table.put(put);
+    }
+
     public static void main(String[] args) throws IOException {
         System.out.println("123");
 //        System.out.println(tableExist("staff"));
 //        System.out.println(tableExist("student"));
 
-        deleteTable("clienttable");
-        System.out.println(tableExist("clienttable"));
+//        deleteTable("clienttable");
+//        System.out.println(tableExist("clienttable"));
+        putData("student","1003","info","name","huangyu");
         close(connection, admin);
 
     }
