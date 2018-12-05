@@ -103,17 +103,30 @@ public class TestHbase {
 
     //CRUD
     public static void putData(String tableName, String rowkey, String cf, String cn, String value) throws IOException {
-        Table table= connection.getTable(TableName.valueOf(tableName));
+        Table table = connection.getTable(TableName.valueOf(tableName));
 
 
         //创建put对象
         Put put = new Put(Bytes.toBytes(rowkey));
         //添加数据
-        put.addColumn(Bytes.toBytes(cf),Bytes.toBytes(cn),Bytes.toBytes(value));
+        put.addColumn(Bytes.toBytes(cf), Bytes.toBytes(cn), Bytes.toBytes(value));
         //执行添加操作
         table.put(put);
     }
 
+    public static void deleteTable(String tableName, String rowKey, String cf, String cn) throws IOException {
+        Table table = connection.getTable(TableName.valueOf(tableName));
+        //创建delete对象
+        Delete delete = new Delete(Bytes.toBytes(rowKey));
+        delete.addColumns(Bytes.toBytes("info"),Bytes.toBytes("name"));
+        delete.addColumns(Bytes.toBytes("info"),Bytes.toBytes("sex"));
+        table.delete(delete);
+        table.close();
+    }
+    public static void scanTable(String tableName, String rowKey, String cf, String cn) throws IOException {
+
+
+    }
     public static void main(String[] args) throws IOException {
         System.out.println("123");
 //        System.out.println(tableExist("staff"));
@@ -121,7 +134,12 @@ public class TestHbase {
 
 //        deleteTable("clienttable");
 //        System.out.println(tableExist("clienttable"));
-        putData("student","1003","info","name","huangyu");
+//        putData("student", "1003", "info", "name", "huangyu");
+//        putData("student", "1003", "info", "sex", "male");
+//        putData("student", "1003", "info", "age", "19");
+
+
+        deleteTable("student","1003","info","sex");
         close(connection, admin);
 
     }
