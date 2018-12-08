@@ -145,7 +145,7 @@ public class TestHbase {
     //获取指定列族：列的数据
     public static void getData(String tableName, String RowKey, String cf, String cn) throws IOException {
         Table table = connection.getTable(TableName.valueOf(tableName));
-        table.get()
+//        table.get()
     }
 
     public static void main(String[] args) throws IOException {
