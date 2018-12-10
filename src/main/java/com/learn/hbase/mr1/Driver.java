@@ -1,15 +1,9 @@
 package com.learn.hbase.mr1;
 
-import com.learn.hbase.mr.FruitMapper;
-import com.learn.hbase.mr.FruitReducer;
-import com.learn.hbase.mr.FruitRunner;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.client.Scan;
-import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
@@ -32,7 +26,7 @@ public class Driver extends Configuration implements Tool {
                 HDFStoHbaseReducer.class,
                 instance);
 //设置输入路径
-        FileInputFormat.setInputPaths(instance,new Path(args[0]));
+        FileInputFormat.setInputPaths(instance, new Path(args[0]));
         //submit
         boolean b = instance.waitForCompletion(true);
         return b ? 1 : 0;
@@ -40,16 +34,17 @@ public class Driver extends Configuration implements Tool {
 
     @Override
     public void setConf(Configuration conf) {
-        this.configuration=conf;
+        this.configuration = conf;
     }
 
     @Override
     public Configuration getConf() {
         return configuration;
     }
+
     public static void main(String[] args) throws Exception {
         Configuration configuration = HBaseConfiguration.create();
-        int i = ToolRunner.run(configuration,new Driver(),args);
+        int i = ToolRunner.run(configuration, new Driver(), args);
         System.exit(i);
 
 
